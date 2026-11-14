@@ -1,0 +1,4 @@
+# Google Colab already has matplotlib and numpy; the notebook installs duckdb if it is missing.
+duckdb>=1.0
+matplotlib>=3.6
+numpy

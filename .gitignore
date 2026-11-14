@@ -1,0 +1,15 @@
+# Raw data, downloads and caches (the notebook keeps them in cdd_cache/)
+cdd_cache/
+*.jsonl.gz
+*.zip
+*.part
+data/site/cache/
+# Output written by the notebook or by running the generator here
+figures/
+site/example-data.js
+data/site/example-data-report.json
+# Python and Jupyter
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+.DS_Store
