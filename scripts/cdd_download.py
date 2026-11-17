@@ -1,7 +1,7 @@
-"""Get the public raw file for the notebook (standard library only).
+"""Get the raw model extraction file for the notebook (standard library only).
 
-The raw extraction is free, but the site asks a few questions before it hands
-out a download link: the same questions as the download form on
+The raw model extraction is free, but the site asks a few questions before it
+hands out a download link: the same questions as the download form on
 https://corporatedisclosuredata.org/#download. `request_links` sends the
 answers to the site and gets back links that work for 24 hours; nothing is
 emailed. `download` saves a link to disk with a progress line, and `unpack_raw`
@@ -29,7 +29,7 @@ from pathlib import Path
 
 DEFAULT_BASE = "https://corporatedisclosuredata.org"
 RAW_NAME = "raw_extractions.jsonl.gz"
-PACKAGE_NAME = "cdd_raw_v0.6.0.zip"
+PACKAGE_NAME = "cdd_raw_v1.0.0.zip"
 USER_AGENT = "cdd-examples-notebook/1.0"
 
 # The allowed answers, as on the site's download form
@@ -86,7 +86,7 @@ def check_answers(answers):
     if out["use"] == "other" and not out["use_detail"]:
         raise DownloadError("Say briefly how you will use the data.")
     if answers.get("agree") is not True:
-        raise DownloadError("Confirm the Community Data License Agreement (Permissive 2.0) to download the data.")
+        raise DownloadError("Confirm the Creative Commons Attribution-NonCommercial 4.0 International license (CC BY-NC 4.0).")
     out["news"] = bool(answers.get("news"))
     out["agree"] = True
     out["delivery"] = "direct"
@@ -211,9 +211,9 @@ def check_raw(path):
         with gzip.open(path, "rt", encoding="utf-8") as f:
             first = json.loads(f.readline())
     except (OSError, ValueError, EOFError) as e:
-        raise DownloadError(f"{path} is not the raw file (a gzip of JSON lines): {e}") from None
+        raise DownloadError(f"{path} is not the raw model extraction file (a gzip of JSON lines): {e}") from None
     if not isinstance(first, dict) or "model_output" not in first:
-        raise DownloadError(f"{path} does not look like the raw extraction (no model_output in the first record).")
+        raise DownloadError(f"{path} does not look like the raw model extraction (no model_output in the first record).")
 
 
 def unpack_raw(zip_path, out_dir):
@@ -260,10 +260,10 @@ def get_raw(cache_dir="cdd_cache", raw_path=None, download_url=None, answers=Non
             print(f"Unpacking {p} ...")
             return unpack_raw(p, raw_dir)
         check_raw(p)
-        print(f"Using the raw file at {p}")
+        print(f"Using the raw model extraction file at {p}")
         return p
     if cached.exists() and marker.exists():
-        print(f"Using the raw file already downloaded: {cached}")
+        print(f"Using the raw model extraction file already downloaded: {cached}")
         return cached
     if not download_url:
         last = cache / "last_request.json"

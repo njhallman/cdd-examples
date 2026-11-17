@@ -8,7 +8,7 @@ Writes
 Run (a minute or two; the raw file is streamed once and never held in memory):
 
   python3 -m venv .venv && .venv/bin/pip install duckdb      # one time
-  .venv/bin/python3 scripts/site/build_example_data.py --raw ~/Downloads/cdd_raw_v0.6.0/raw_extractions.jsonl.gz
+  .venv/bin/python3 scripts/site/build_example_data.py --raw ~/Downloads/cdd_raw_v1.0.0/raw_extractions.jsonl.gz
   .venv/bin/python3 scripts/site/build_example_data.py --raw ... --check   # rebuild and compare with the committed files
 
 Requirements: Python 3.9+ and the `duckdb` package (only to read two Parquet
@@ -769,7 +769,7 @@ def build(raw, cache, inputs):
     by_cik = {f["cik"]: f["row"] for f in firms}
     nodes = [[xs[i], ys[i], by_cik[c][0], by_cik[c][2], degree[i]] for i, c in enumerate(core_ciks)]
     C = {"firms": [f["row"] for f in firms],
-         "net": {"n_firms": len(firms), "giant": giant, "nodes": nodes, "edges": [list(e) for e in net_edges]}}
+         "net": {"n_firms": len(firms), "giant": giant, "linked": linked, "nodes": nodes, "edges": [list(e) for e in net_edges]}}
     extra["network"] = {"person_pairs": pairs, "company_links": len(edges), "companies_with_a_link": linked,
                         "largest_group": giant, "companies_plotted": len(nodes), "links_plotted": len(net_edges),
                         "links_within_one_industry": sum(1 for a, b in net_edges if nodes[a][3] == nodes[b][3]),

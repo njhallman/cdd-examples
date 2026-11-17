@@ -11,14 +11,17 @@ The notebook `reproduce_figures.ipynb` does it in three steps:
 
 1. **Get the data.** It asks the same questions as the site's download form (name, email, institution,
    role and intended use), sends them to corporatedisclosuredata.org, and receives a download link that
-   works for 24 hours. It then downloads the raw file (`cdd_raw_v0.6.0.zip`, about 830 MB) and checks it.
-   Nothing is emailed. If you already have the file, point the notebook at it and no request is sent.
+   works for 24 hours. It then downloads the raw model extraction file (`cdd_raw_v1.0.0.zip`, about
+   830 MB) and checks it. Nothing is emailed. If you already have the file, point the notebook at it and no request is sent.
 2. **Build the chart data.** It runs `scripts/site/build_example_data.py`, the same script that builds the
    charts on the site, and checks that the result matches the data behind the site's charts.
 3. **Draw the charts** with matplotlib and save each one to `figures/`.
 
-In Colab the first run takes about 5 to 10 minutes, mostly the download and one pass over the raw file.
-Later runs reuse the download and a slim extract kept in `cdd_cache/` and take under a minute.
+The cleaned tables behind the site's Ask page are a separate dataset (version 0.7.0, beta)
+and are not used here.
+
+In Colab the first run takes about 5 to 10 minutes, mostly the download and one pass over the raw model
+extraction file. Later runs reuse the download and a slim extract kept in `cdd_cache/` and take under a minute.
 
 ## Run it in Colab
 
@@ -35,7 +38,7 @@ python3 -m venv .venv
 .venv/bin/jupyter notebook reproduce_figures.ipynb
 ```
 
-Python 3.9 or later. If you already downloaded the raw file from the site, set `RAW_PATH` in the notebook
+Python 3.9 or later. If you already downloaded the raw model extraction file from the site, set `RAW_PATH` in the notebook
 (or the environment variable `CDD_RAW_PATH`) to `raw_extractions.jsonl.gz` or to the zip. If you have a
 download link from the site's email, set `CDD_DOWNLOAD_URL` instead.
 
@@ -44,7 +47,7 @@ download link from the site's email, set `CDD_DOWNLOAD_URL` instead.
 | What | From | When |
 |---|---|---|
 | Your answers to the download questions | sent to corporatedisclosuredata.org | only when the notebook requests a new link |
-| `cdd_raw_v0.6.0.zip` (the raw extraction) | the 24-hour link the site returns | once; kept in `cdd_cache/` |
+| `cdd_raw_v1.0.0.zip` (the raw model extraction) | the 24-hour link the site returns | once; kept in `cdd_cache/` |
 | `example-data.js` (the site's chart data) | corporatedisclosuredata.org | to compare results; skipped when offline |
 | Public float from SEC EDGAR | data.sec.gov | only if you turn on the optional refetch cell (about 35 minutes) |
 
@@ -68,8 +71,12 @@ site (`python -m unittest discover -s tests`).
 ## License
 
 The code in this repository is under the MIT license (see `LICENSE`). The data are licensed under the
-[Community Data License Agreement (Permissive 2.0)](https://corporatedisclosuredata.org/data/LICENSE); see
-[corporatedisclosuredata.org](https://corporatedisclosuredata.org) for how to cite them. The SEC files in
+[Creative Commons Attribution-NonCommercial 4.0 International license (CC BY-NC 4.0)](https://corporatedisclosuredata.org/data/LICENSE).
+Academic research, teaching and other non-commercial use are free, with credit to the dataset. Journalism
+is also free, including at commercial news organizations; we grant that permission in addition to the
+license. Any other commercial use needs our written permission first; contact the team listed on the Team
+page of https://corporatedisclosuredata.org. See
+[corporatedisclosuredata.org](https://corporatedisclosuredata.org) for how to cite the data. The SEC files in
 `data/` and `site/` are derived from public SEC filings.
 
 Questions about the data: data@corporatedisclosuredata.org.

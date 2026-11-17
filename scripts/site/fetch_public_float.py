@@ -78,7 +78,7 @@ A company with no public-float facts at all (the SEC answers 404) has no rows.
 Run (stdlib only, Python 3.9+; about 35 minutes for 16,000 companies at the
 SEC's limit of 8 requests a second; safe to stop and restart):
 
-  python3 scripts/site/fetch_public_float.py --raw ~/Downloads/cdd_raw_v0.6.0/raw_extractions.jsonl.gz
+  python3 scripts/site/fetch_public_float.py --raw ~/Downloads/cdd_raw_v1.0.0/raw_extractions.jsonl.gz
 
 Each response is kept under --cache (git-ignored), so a rerun downloads only
 what is missing; --refresh downloads again. The output is sorted and does not
