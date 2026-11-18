@@ -42,6 +42,32 @@ Python 3.9 or later. If you already downloaded the raw model extraction file fro
 (or the environment variable `CDD_RAW_PATH`) to `raw_extractions.jsonl.gz` or to the zip. If you have a
 download link from the site's email, set `CDD_DOWNLOAD_URL` instead.
 
+## Use the data in Stata, SAS, R or Excel
+
+The download holds one nested record for each proxy statement, which most statistics packages cannot
+import directly. `scripts/flatten_to_csv.py` turns it into plain CSV tables, one row per item:
+
+```
+python3 scripts/flatten_to_csv.py cdd_raw_v1.0.0.zip csv_out
+```
+
+It needs only Python 3.9 or later, with nothing to install. The full file takes about three minutes and
+writes about 2 GB of CSV files. Add `--limit 1000` for a quick try on the first 1,000 records. The main tables are:
+
+| File | One row for each |
+|---|---|
+| `proxy_statements.csv` | proxy statement: governance policies, auditor, meeting details |
+| `directors.csv` | director listed in a proxy statement: age, independence, pay, share ownership |
+| `director_committee_memberships.csv`, `director_education.csv`, `director_experience.csv` and others | item in a director's list |
+| `audit_fee_lines.csv` | line of the auditor fee table |
+
+Every table has `accession_number`, the SEC's ID for the proxy statement, so tables join on it. Director
+tables also have `director_index`. True and False are written as 1 and 0, and missing values are empty.
+The values are exactly what the model recorded; nothing is corrected.
+
+Then, for example, in Stata: `import delimited using csv_out/directors.csv, bindquote(strict) clear`.
+In SAS: `proc import datafile="csv_out/directors.csv" out=directors dbms=csv replace; guessingrows=max; run;`
+
 ## What is downloaded, and from where
 
 | What | From | When |
