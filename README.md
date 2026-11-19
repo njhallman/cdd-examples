@@ -17,7 +17,7 @@ The notebook `reproduce_figures.ipynb` does it in three steps:
    charts on the site, and checks that the result matches the data behind the site's charts.
 3. **Draw the charts** with matplotlib and save each one to `figures/`.
 
-The cleaned tables behind the site's Ask page are a separate dataset (version 0.7.0, beta)
+The cleaned tables behind the site's Ask page are a separate dataset (version 0.7.2, beta)
 and are not used here.
 
 In Colab the first run takes about 5 to 10 minutes, mostly the download and one pass over the raw model
