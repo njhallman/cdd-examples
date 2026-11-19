@@ -18,7 +18,7 @@ tables join on it. Director tables also carry director_index, the director's
 position in that proxy statement, so they join on both.
 
 Usage:
-  python scripts/flatten_to_csv.py cdd_raw_v1.0.0.zip csv_out
+  python scripts/flatten_to_csv.py cdd_raw_v1.1.0.zip csv_out
   python scripts/flatten_to_csv.py raw_extractions.jsonl.gz csv_out --limit 1000
 
 Values are exactly what the model recorded; nothing is corrected. True and False
@@ -135,7 +135,7 @@ def tables(record, with_text):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("raw", help="cdd_raw_v1.0.0.zip, or the raw_extractions.jsonl.gz inside it")
+    parser.add_argument("raw", help="cdd_raw_v1.1.0.zip, or the raw_extractions.jsonl.gz inside it")
     parser.add_argument("out", help="folder to write the CSV files into")
     parser.add_argument("--limit", type=int, default=0, help="read only the first N records (for a quick try)")
     parser.add_argument("--with-text", action="store_true", help="keep the long text columns")

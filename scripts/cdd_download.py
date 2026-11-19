@@ -29,7 +29,7 @@ from pathlib import Path
 
 DEFAULT_BASE = "https://corporatedisclosuredata.org"
 RAW_NAME = "raw_extractions.jsonl.gz"
-PACKAGE_NAME = "cdd_raw_v1.0.0.zip"
+PACKAGE_NAME = "cdd_raw_v1.1.0.zip"
 USER_AGENT = "cdd-examples-notebook/1.0"
 
 # The allowed answers, as on the site's download form

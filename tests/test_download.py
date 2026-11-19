@@ -64,8 +64,8 @@ class Mock(BaseHTTPRequestHandler):
             return self.reply(503, {"error": "Downloads are temporarily unavailable. Please try again later."})
         port = self.server.server_address[1]
         self.reply(200, {"ok": True, "delivery": "direct", "expiresAt": "2099-01-01T00:00:00.000Z",
-                         "downloads": [{"filename": "cdd_raw_v1.0.0.zip",
-                                        "url": f"http://127.0.0.1:{port}/v1.0.0/cdd_raw_v1.0.0.zip?X-Amz-Signature=abc"}]})
+                         "downloads": [{"filename": "cdd_raw_v1.1.0.zip",
+                                        "url": f"http://127.0.0.1:{port}/v1.1.0/cdd_raw_v1.1.0.zip?X-Amz-Signature=abc"}]})
 
     def do_GET(self):
         self.send_response(200)
@@ -100,7 +100,7 @@ class DownloadTests(unittest.TestCase):
         self.assertEqual(body, {"name": "Test Reader", "email": "reader@example.org", "institution": "Example University",
                                 "use_detail": "", "heard": "", "role": "faculty", "use": "teaching", "news": False,
                                 "agree": True, "delivery": "direct", "client": "colab"})
-        self.assertFalse((self.cache / "cdd_raw_v1.0.0.zip").exists())     # zip removed after unpacking
+        self.assertFalse((self.cache / "cdd_raw_v1.1.0.zip").exists())     # zip removed after unpacking
         self.assertTrue((self.cache / "raw" / "LICENSE").exists())
 
     def test_second_run_uses_cache_without_request(self):
@@ -138,12 +138,12 @@ class DownloadTests(unittest.TestCase):
         self.assertEqual(Mock.bodies, [])
 
     def test_download_url_skips_request(self):
-        raw = dl.get_raw(self.cache, download_url=f"{self.base}/v1.0.0/cdd_raw_v1.0.0.zip", ask=lambda: self.fail("asked"))
+        raw = dl.get_raw(self.cache, download_url=f"{self.base}/v1.1.0/cdd_raw_v1.1.0.zip", ask=lambda: self.fail("asked"))
         self.assertTrue(raw.exists())
         self.assertEqual(Mock.bodies, [])
 
     def test_raw_path_zip_and_bad_file(self):
-        z = Path(self.tmp.name) / "cdd_raw_v1.0.0.zip"
+        z = Path(self.tmp.name) / "cdd_raw_v1.1.0.zip"
         z.write_bytes(Mock.package)
         self.assertTrue(dl.get_raw(self.cache, raw_path=z).exists())
         bad = Path(self.tmp.name) / "bad.jsonl.gz"

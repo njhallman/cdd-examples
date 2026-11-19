@@ -11,8 +11,8 @@ The notebook `reproduce_figures.ipynb` does it in three steps:
 
 1. **Get the data.** It asks the same questions as the site's download form (name, email, institution,
    role and intended use), sends them to corporatedisclosuredata.org, and receives a download link that
-   works for 24 hours. It then downloads the raw model extraction file (`cdd_raw_v1.0.0.zip`, about
-   830 MB) and checks it. Nothing is emailed. If you already have the file, point the notebook at it and no request is sent.
+   works for 24 hours. It then downloads the raw model extraction file (`cdd_raw_v1.1.0.zip`, about
+   740 MB) and checks it. Nothing is emailed. If you already have the file, point the notebook at it and no request is sent.
 2. **Build the chart data.** It runs `scripts/site/build_example_data.py`, the same script that builds the
    charts on the site, and checks that the result matches the data behind the site's charts.
 3. **Draw the charts** with matplotlib and save each one to `figures/`.
@@ -48,7 +48,7 @@ The download holds one nested record for each proxy statement, which most statis
 import directly. `scripts/flatten_to_csv.py` turns it into plain CSV tables, one row per item:
 
 ```
-python3 scripts/flatten_to_csv.py cdd_raw_v1.0.0.zip csv_out
+python3 scripts/flatten_to_csv.py cdd_raw_v1.1.0.zip csv_out
 ```
 
 It needs only Python 3.9 or later, with nothing to install. The full file takes about three minutes and
@@ -73,7 +73,7 @@ In SAS: `proc import datafile="csv_out/directors.csv" out=directors dbms=csv rep
 | What | From | When |
 |---|---|---|
 | Your answers to the download questions | sent to corporatedisclosuredata.org | only when the notebook requests a new link |
-| `cdd_raw_v1.0.0.zip` (the raw model extraction) | the 24-hour link the site returns | once; kept in `cdd_cache/` |
+| `cdd_raw_v1.1.0.zip` (the raw model extraction) | the 24-hour link the site returns | once; kept in `cdd_cache/` |
 | `example-data.js` (the site's chart data) | corporatedisclosuredata.org | to compare results; skipped when offline |
 | Public float from SEC EDGAR | data.sec.gov | only if you turn on the optional refetch cell (about 35 minutes) |
 

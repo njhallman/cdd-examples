@@ -8,7 +8,7 @@ Writes
 Run (a minute or two; the raw file is streamed once and never held in memory):
 
   python3 -m venv .venv && .venv/bin/pip install duckdb      # one time
-  .venv/bin/python3 scripts/site/build_example_data.py --raw ~/Downloads/cdd_raw_v1.0.0/raw_extractions.jsonl.gz
+  .venv/bin/python3 scripts/site/build_example_data.py --raw ~/Downloads/cdd_raw_v1.1.0/raw_extractions.jsonl.gz
   .venv/bin/python3 scripts/site/build_example_data.py --raw ... --check   # rebuild and compare with the committed files
 
 Requirements: Python 3.9+ and the `duckdb` package (only to read two Parquet
@@ -21,7 +21,7 @@ be given as an argument (see --help); the defaults are the repository files.
 run skips the raw pass. The cache holds nothing that is not in the raw file.
 
 Inputs
-  --raw                                   raw_extractions.jsonl.gz, v0.6.0 (public download)
+  --raw                                   raw_extractions.jsonl.gz, v1.1.0 (public download)
   data/sic/firm_sic.parquet               current SEC EDGAR industry (SIC) code per company
   data/site/public_float.csv              every public float reported to the SEC (fetch_public_float.py), after
                                           its automatic checks and the manual list in public_float_exclusions.csv
@@ -747,7 +747,7 @@ def build(raw, cache, inputs):
             tidy(statistics.median(ages)) if ages else None,
             len(valid), None, n_female,
             exchange or "No exchange listed", auditor_group(rec["auditor"]), None,
-            "2000 or earlier" if fy <= 2000 else "2001 to 2010" if fy <= 2010 else "2011 to 2020" if fy <= 2020 else "2021 or later",
+            "2001 or earlier" if fy <= 2001 else "2002 to 2010" if fy <= 2010 else "2011 to 2020" if fy <= 2020 else "2021 or later",
             "Dual-class shares" if rec["dual"] else "Single class of shares",
             float_group(floats.at(cik, rec["fd"])),
         ]})
@@ -841,7 +841,7 @@ DEFINITIONS = {
     "skills_dumbbell": "Among valid director rows with a skills or skills_matrix entry, in annual-meeting proxies of that year, "
                        "the share whose entries match the skill's keyword list.",
     "firms": "One row per CIK: the latest 2025 annual-meeting proxy with a valid director row. Board size, women and median age "
-             "use all valid director rows. First proxy year is the CIK's earliest record in the raw file. Share class is "
+             "use all valid director rows. First proxy year is the CIK's earliest record in the raw file, which begins in 2001. Share class is "
              "dual_class_structure. Auditor group is from the auditor's name; members of a Big Four network count with it. "
              "Public float group: the latest public float the company reported to the SEC within 400 days before that proxy.",
     "network": "2025 companies as above; valid rows of directors who are not departing. Two rows at different companies are the "
@@ -880,7 +880,7 @@ def build_report(D, C, SK, extra):
     base = json.loads(BASELINE.read_text(encoding="utf-8")) if BASELINE.exists() else None
     rep = {
         "note": "Old = the numbers embedded in the original homepage (built from the processed release; no script survived). "
-                "New = scripts/site/build_example_data.py on the public raw file v0.6.0.",
+                "New = scripts/site/build_example_data.py on the public raw file v1.1.0, which begins in 2001.",
         "definitions": DEFINITIONS,
         "outside_inputs": OUTSIDE_INPUTS,
         "counts": extra,
@@ -926,11 +926,11 @@ def build_report(D, C, SK, extra):
     rep["firms"] = {"old": base["C"]["firms"], "new": new_firms}
     rep["network"] = {"old": base["C"]["net"], "new": new_net}
     rep["not_rebuilt"] = [
-        "tiles.directors (distinct people): needs person identity across 30 years; replaced by director_rows, the count of valid director rows",
+        "tiles.directors (distinct people): needs person identity across all years; replaced by director_rows, the count of valid director rows",
         "C.firms column 7 (median director pay): left null; the page no longer plots it",
         "C.skills (an unused ten-group skills breakdown): dropped",
         "classified boards before 2012: left out; the SEC phased in the float tag for smaller companies only in 2011, so earlier years cover mostly large companies",
-        "D.skills (cyber and AI from 1997, not drawn): now the same rule as the trend chart, so it differs slightly from the old one",
+        "D.skills (cyber and AI for every year, not drawn): now the same rule as the trend chart, so it differs slightly from the old one",
     ]
     return rep
 
@@ -943,7 +943,7 @@ def render_js(D, C, SK):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("--raw", help="path to raw_extractions.jsonl.gz (v0.6.0)")
+    ap.add_argument("--raw", help="path to raw_extractions.jsonl.gz (v1.1.0)")
     ap.add_argument("--cache", help="optional slim per-filing extract; written on the first run, read afterwards")
     ap.add_argument("--check", action="store_true", help="rebuild and compare with the committed files; write nothing")
     ap.add_argument("--public-float", default=str(PUBLIC_FLOAT), help="public_float.csv from fetch_public_float.py")
